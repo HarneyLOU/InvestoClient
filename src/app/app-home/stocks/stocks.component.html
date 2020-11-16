@@ -1,0 +1,9 @@
+<div class="grid-container">
+  <h1 class="mat-h1">Stocks</h1>
+
+  <mat-grid-list [cols]="stocksPerRow" rowHeight="300px">
+    <mat-grid-tile [colspan]="1" [rowspan]="1" *ngFor="let stock of stocks">
+      <app-stock-card [stock]="stock"></app-stock-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
