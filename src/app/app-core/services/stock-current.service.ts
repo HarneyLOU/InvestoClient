@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StockShort } from '../models/StockShort';
 import { StockCurrent } from './../models/StockCurrent';
+import { StockService } from './../services/stock.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,11 @@ import { StockCurrent } from './../models/StockCurrent';
 export class StockCurrentService {
   private stocksCurrent: StockCurrent[] = [];
 
-  constructor() {}
+  constructor(private stockService: StockService) {}
+
+  public getStock(symbol: string): StockCurrent {
+    return this.stocksCurrent.find((s) => s.symbol === symbol);
+  }
 
   public getAll(): StockCurrent[] {
     return this.stocksCurrent;

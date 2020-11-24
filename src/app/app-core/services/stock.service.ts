@@ -22,6 +22,9 @@ export class StockService {
   }
 
   public getStockShortAll(): Observable<StockShort[]> {
-    return this.http.get<StockShort[]>(this.apiUrl + '/stock/short');
+    return this.http.get<StockShort[]>(
+      this.apiUrl + '/stock/short',
+      this.httpOptions
+    );
   }
 }
