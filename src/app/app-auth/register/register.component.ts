@@ -4,11 +4,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AccountService } from './../../app-core/services/accout.service';
-import { AlertService } from './../../app-core/services/alert.service';
 
-@Component({ templateUrl: 'register.component.html' })
+@Component({
+  templateUrl: 'register.component.html',
+  styleUrls: ['./register.component.scss'],
+})
 export class RegisterComponent implements OnInit {
   form: FormGroup;
+  registrationInvalid = false;
   loading = false;
   submitted = false;
 
@@ -16,31 +19,36 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private accountService: AccountService,
-    private alertService: AlertService
+    private accountService: AccountService
   ) {}
 
   ngOnInit() {
-    this.form = this.formBuilder.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      username: ['', Validators.required],
-      password: [''],
-    });
+    this.form = this.formBuilder.group(
+      {
+        email: ['', [Validators.required, Validators.email]],
+        username: ['', Validators.required],
+        password: ['', [Validators.required, Validators.minLength(7)]],
+        confirmationPassword: [
+          '',
+          [Validators.required, Validators.minLength(7)],
+        ],
+      },
+      {
+        validator: this.checkPasswords,
+      }
+    );
   }
 
-  // convenience getter for easy access to form fields
-  get f() {
-    return this.form.controls;
+  checkPasswords(group: FormGroup) {
+    return group.get('password').value ===
+      group.get('confirmationPassword').value
+      ? null
+      : { notSame: true };
   }
 
   onSubmit() {
     this.submitted = true;
 
-    // reset alerts on submit
-    this.alertService.clear();
-
-    // stop here if form is invalid
     if (this.form.invalid) {
       return;
     }
@@ -51,14 +59,11 @@ export class RegisterComponent implements OnInit {
       .pipe(first())
       .subscribe(
         (data) => {
-          this.alertService.success('Registration successful', {
-            keepAfterRouteChange: true,
-          });
           this.router.navigate(['../login'], { relativeTo: this.route });
         },
         (error) => {
-          this.alertService.error(error);
           this.loading = false;
+          this.registrationInvalid = true;
         }
       );
   }

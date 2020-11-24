@@ -4,6 +4,7 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { SignalrService } from './../../app-core/services/signalr.service';
 import { StockCurrentService } from './../../app-core/services/stock-current.service';
 import { StockService } from './../../app-core/services/stock.service';
+import { StockShort } from 'src/app/app-core/models/StockShort';
 
 @Component({
   selector: 'app-stocks',
@@ -11,13 +12,12 @@ import { StockService } from './../../app-core/services/stock.service';
   styleUrls: ['./stocks.component.scss'],
 })
 export class StocksComponent implements OnInit {
-  stocks: any;
+  stocks: StockShort[];
   stocksPerRow: number;
 
   constructor(
     private breakpointObserver: BreakpointObserver,
     private signalrService: SignalrService,
-    private stockCurrentService: StockCurrentService,
     private stockService: StockService
   ) {}
 
@@ -40,13 +40,13 @@ export class StocksComponent implements OnInit {
           this.stocksPerRow = 1;
         }
         if (result.breakpoints[Breakpoints.Small]) {
-          this.stocksPerRow = 2;
-        }
-        if (result.breakpoints[Breakpoints.Medium]) {
           this.stocksPerRow = 3;
         }
-        if (result.breakpoints[Breakpoints.Large]) {
+        if (result.breakpoints[Breakpoints.Medium]) {
           this.stocksPerRow = 4;
+        }
+        if (result.breakpoints[Breakpoints.Large]) {
+          this.stocksPerRow = 5;
         }
         if (result.breakpoints[Breakpoints.XLarge]) {
           this.stocksPerRow = 6;
