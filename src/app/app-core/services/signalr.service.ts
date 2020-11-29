@@ -23,7 +23,7 @@ export class SignalrService {
       .catch((err) => console.log('Error while starting connection: ' + err));
   };
 
-  public ListenStockUpdate = (stocks) => {
+  public ListenStockUpdate = () => {
     this.hubConnection.on('stockupdate', (data) => {
       for (const d of data) {
         const stock: StockCurrent = {
@@ -31,9 +31,9 @@ export class SignalrService {
           price: d.price,
           date: d.date,
         };
-        this.stockCurrentService.update(stocks, stock);
+        this.stockCurrentService.update(stock);
       }
-      console.log(data);
+      // console.log(data);
     });
   };
 }

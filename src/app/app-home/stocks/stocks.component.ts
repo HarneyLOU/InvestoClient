@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { SignalrService } from './../../app-core/services/signalr.service';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+
 import { StockCurrentService } from './../../app-core/services/stock-current.service';
 import { StockService } from './../../app-core/services/stock.service';
 import { StockShort } from 'src/app/app-core/models/StockShort';
@@ -14,18 +16,33 @@ import { StockShort } from 'src/app/app-core/models/StockShort';
 export class StocksComponent implements OnInit {
   stocks: StockShort[];
   stocksPerRow: number;
+  delay = 100;
+
+  filteredOptions: Observable<StockShort[]>;
+
+  myControl = new FormControl('');
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private signalrService: SignalrService,
-    private stockService: StockService
+    private stockCurrentService: StockCurrentService
   ) {}
 
+  private _filter(value: string): StockShort[] {
+    const filterValue = value.toLowerCase();
+    return this.stocks.filter(
+      (option) =>
+        option.symbol.toLowerCase().includes(filterValue) ||
+        option.name.toLowerCase().includes(filterValue)
+    );
+  }
+
   ngOnInit(): void {
-    this.stockService.getStockShortAll().subscribe((data) => {
+    this.stockCurrentService.getAll().subscribe((data) => {
       this.stocks = data;
-      this.signalrService.startConnection();
-      this.signalrService.ListenStockUpdate(this.stocks);
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filter(value))
+      );
     });
     this.breakpointObserver
       .observe([

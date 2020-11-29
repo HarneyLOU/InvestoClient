@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { NavigationComponent } from './navigation/navigation.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
@@ -14,6 +15,9 @@ import { StartupComponent } from './startup/startup.component';
 import { AddWalletComponent } from './wallets/add-wallet/add-wallet.component';
 import { WalletComponent } from './wallets/wallet/wallet.component';
 import { StockOrderComponent } from './stocks/stock-order/stock-order.component';
+import { ErrorComponent } from './error/error.component';
+import { StocksTableComponent } from './tables/stocks-table/stocks-table.component';
+import { OrdersTableComponent } from './tables/orders-table/orders-table.component';
 
 @NgModule({
   declarations: [
@@ -27,12 +31,16 @@ import { StockOrderComponent } from './stocks/stock-order/stock-order.component'
     AddWalletComponent,
     WalletComponent,
     StockOrderComponent,
+    ErrorComponent,
+    StocksTableComponent,
+    OrdersTableComponent,
   ],
   imports: [
     AppMaterialModule,
     AppRoutingModule,
     AppCoreModule,
     ReactiveFormsModule,
+    FormsModule,
   ],
   exports: [NavigationComponent, StartupComponent],
 })

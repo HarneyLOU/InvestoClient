@@ -1,4 +1,4 @@
-<div>
+<div [@fade]="{ value: '', params: { delay: delay } }">
   <mat-card class="stock-card">
     <mat-card-header>
       <div mat-card-avatar>
@@ -21,7 +21,7 @@
       <button
         mat-button
         routerLink="/order"
-        [queryParams]="{ symbol: stock.symbol }"
+        [queryParams]="{ symbol: stock.symbol, action: 'buy' }"
       >
         BUY
       </button>

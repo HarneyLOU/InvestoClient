@@ -1,4 +1,4 @@
-import { DateSelectionModelChange } from '@angular/material/datepicker';
+import { WalletState } from './WalletState';
 
 export interface Wallet {
   walletId?: number;
@@ -6,5 +6,8 @@ export interface Wallet {
   description: string;
   ownerId?: number;
   initMoney: number;
+  balance?: number;
   created?: Date;
+  possesions?: WalletState[];
+  value?: number;
 }

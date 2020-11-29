@@ -25,6 +25,13 @@ export class WalletService {
     return this.http.get<Wallet[]>(this.apiUrl + '/wallet', this.httpOptions);
   }
 
+  public getUserWallet(id: number): Observable<Wallet> {
+    return this.http.get<Wallet>(
+      this.apiUrl + '/wallet/' + id,
+      this.httpOptions
+    );
+  }
+
   public addUserWallet(wallet: Wallet): Observable<Wallet> {
     return this.http.post<Wallet>(
       this.apiUrl + '/wallet',
