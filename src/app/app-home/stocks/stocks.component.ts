@@ -57,16 +57,16 @@ export class StocksComponent implements OnInit {
           this.stocksPerRow = 1;
         }
         if (result.breakpoints[Breakpoints.Small]) {
-          this.stocksPerRow = 3;
+          this.stocksPerRow = 1;
         }
         if (result.breakpoints[Breakpoints.Medium]) {
-          this.stocksPerRow = 4;
+          this.stocksPerRow = 2;
         }
         if (result.breakpoints[Breakpoints.Large]) {
-          this.stocksPerRow = 5;
+          this.stocksPerRow = 3;
         }
         if (result.breakpoints[Breakpoints.XLarge]) {
-          this.stocksPerRow = 6;
+          this.stocksPerRow = 4;
         }
       });
   }

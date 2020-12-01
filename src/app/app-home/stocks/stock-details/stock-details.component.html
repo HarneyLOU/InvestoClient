@@ -1,0 +1,49 @@
+<div class="grid-container">
+  <h1 class="mat-h1">Stock details</h1>
+  <mat-card class="main-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h1 style="font-weight: bold">{{ company?.name }}</h1>
+      </mat-card-title>
+      <mat-card-subtitle
+        >Additional informations about chosen stock</mat-card-subtitle
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <mat-button-toggle-group
+        name="chart"
+        aria-label="Chart"
+        (change)="onChartChange($event)"
+      >
+        <mat-button-toggle [checked]="true" value="intraday"
+          >Intraday</mat-button-toggle
+        >
+        <mat-button-toggle value="daily">Daily</mat-button-toggle>
+        <mat-button-toggle value="candles">Candles</mat-button-toggle>
+      </mat-button-toggle-group>
+      <div
+        class="charts"
+        *ngIf="company && checkIfChartIsLoaded(); else elseBlock"
+      >
+        <app-line-chart
+          *ngIf="selectedChart === 'intraday'"
+          [company]="company"
+          [data]="intradayData"
+        ></app-line-chart>
+        <app-line-chart-daily
+          *ngIf="selectedChart === 'daily'"
+          [company]="company"
+          [data]="dailyData"
+        ></app-line-chart-daily>
+        <app-candle-chart
+          *ngIf="selectedChart === 'candles'"
+          [company]="company"
+          [data]="candlesData"
+        ></app-candle-chart>
+      </div>
+      <ng-template #elseBlock style="margin: 50px">
+        <mat-spinner></mat-spinner>
+      </ng-template>
+    </mat-card-content>
+  </mat-card>
+</div>

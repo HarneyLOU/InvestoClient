@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "~10.0.11",
     "@angular/router": "~10.0.11",
     "@aspnet/signalr": "^3.0.0-preview6.19307.2",
+    "lightweight-charts": "^3.2.0",
     "particles.js": "^2.0.0",
     "rxjs": "~6.5.5",
     "tslib": "^2.0.0",

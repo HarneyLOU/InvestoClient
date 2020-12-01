@@ -27,10 +27,10 @@
     <ng-container matColumnDef="change">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Change</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.change | percent: '1.2-3' }}
+        {{ element.change | percent: '1.2-2' }}
       </td>
       <td mat-footer-cell *matFooterCellDef>
-        {{ getTotalChange() | percent: '1.2-3' }}
+        {{ getTotalChange() | percent: '1.2-2' }}
       </td>
     </ng-container>
 
@@ -40,7 +40,11 @@
         <button
           mat-button
           routerLink="/order"
-          [queryParams]="{ symbol: element.symbol, action: 'sell' }"
+          [queryParams]="{
+            symbol: element.symbol,
+            action: 'sell',
+            wallet: wallet?.walletId
+          }"
         >
           Sell</button
         ><button mat-button>Details</button>

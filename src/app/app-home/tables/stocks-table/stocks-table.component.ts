@@ -6,6 +6,7 @@ import {
   AfterViewInit,
 } from '@angular/core';
 import { WalletState } from 'src/app/app-core/models/WalletState';
+import { Wallet } from 'src/app/app-core/models/Wallet';
 import { StockCurrentService } from 'src/app/app-core/services/stock-current.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -27,6 +28,7 @@ export interface StockPossesion {
 export class StocksTableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @Input() possesions: WalletState[];
+  @Input() wallet: Wallet;
 
   displayedColumns: string[] = [
     'position',
@@ -46,6 +48,7 @@ export class StocksTableComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.wallet;
     this.dataSource = new MatTableDataSource();
     let i = 1;
     for (let possesion of this.possesions) {

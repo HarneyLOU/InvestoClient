@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StockShort } from 'src/app/app-core/models/StockShort';
 import { StockCurrentService } from './../../../app-core/services/stock-current.service';
 import { FormControl, Validators } from '@angular/forms';
@@ -29,9 +29,12 @@ export class StockOrderComponent implements OnInit {
   amountControl = new FormControl('', [Validators.min(1), Validators.required]);
   wallets: Wallet[];
   selectedWallet: Wallet;
+  walletId: number;
 
   cols: number;
   rows: number;
+
+  submitted = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,7 +42,8 @@ export class StockOrderComponent implements OnInit {
     private walletService: WalletService,
     private orderService: OrderService,
     private breakpointObserver: BreakpointObserver,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   public getSelectedStock(selected: string): void {
@@ -64,6 +68,7 @@ export class StockOrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.symbol = this.route.snapshot.queryParamMap.get('symbol');
+    this.walletId = +this.route.snapshot.queryParamMap.get('wallet');
     this.action = this.route.snapshot.queryParamMap.get('action') ?? 'buy';
     this.stockControl.setValue(this.symbol);
     this.getSelectedStock(this.symbol);
@@ -72,7 +77,7 @@ export class StockOrderComponent implements OnInit {
       this.stocks = stocksData;
       this.walletService.getUserWallets().subscribe((walletsData) => {
         this.wallets = walletsData;
-        this.selectedWallet = this.wallets.length < 1 ? null : this.wallets[0];
+        this.selectedWallet = this.getRightWallet();
         this.filteredOptions = this.stockControl.valueChanges.pipe(
           startWith(''),
           map((value) => this._filter(value))
@@ -130,20 +135,39 @@ export class StockOrderComponent implements OnInit {
       walletId: this.selectedWallet.walletId,
       buy: this.action === 'buy' ? true : false,
     };
+    this.submitted = true;
     this.orderService.addOrder(order).subscribe((data) => {
-      this.openSnackBar('Order has been requested', 'Close');
+      this.openSnackBar('Order has been requested', 'Check');
     });
   }
 
   openSnackBar(message: string, action: string) {
-    this.snackBar.open(message, action, {
-      duration: 5000,
-    });
+    this.snackBar
+      .open(message, action, {
+        duration: 2500,
+      })
+      .afterDismissed()
+      .subscribe(() => {
+        if (action === 'Check')
+          this.router.navigate(['/wallets', this.selectedWallet.walletId]);
+      });
   }
 
   getAmount(stock: StockShort): number {
     return this.selectedWallet?.possesions.find(
       (s) => s.symbol === stock.symbol
     ).amount;
+  }
+
+  getRightWallet(): Wallet {
+    if (this.wallets.length > 0) {
+      if (this.walletId !== 0) {
+        const wallet = this.wallets.find((w) => w.walletId === this.walletId);
+        if (wallet) {
+          return wallet;
+        }
+      }
+      return this.wallets[0];
+    }
   }
 }

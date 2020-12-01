@@ -1,16 +1,11 @@
-.price {
-  text-align: center;
-  font-size: large;
-}
-
 .logo {
   width: 48px;
   height: 48px;
 }
 
 .stock-card {
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
 }
 
 mat-card {
@@ -25,4 +20,43 @@ mat-card-header {
 mat-card-content {
   flex-grow: 1;
   overflow: auto;
+  padding-top: 5px;
+}
+
+mat-card-actions {
+}
+
+.price-detail {
+  text-align: center;
+}
+
+.change {
+  font-size: 24px;
+  margin: auto;
+}
+
+.plus {
+  color: green;
+}
+
+.minus {
+  color: red;
+}
+
+.price {
+  text-align: center;
+  font-size: 32px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+  color: gray;
+}
+
+.day-low-max {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.info-detail {
+  text-align: center;
 }
