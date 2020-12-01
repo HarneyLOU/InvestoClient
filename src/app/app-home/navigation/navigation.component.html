@@ -9,10 +9,10 @@
   >
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item href="/home">Home</a>
-      <a mat-list-item href="/stocks">Stocks</a>
-      <a mat-list-item href="/wallets">Wallets</a>
-      <a mat-list-item href="/order">Order</a>
+      <a mat-list-item routerLink="/home">Home</a>
+      <a mat-list-item routerLink="/stocks">Stocks</a>
+      <a mat-list-item routerLink="/wallets">Wallets</a>
+      <a mat-list-item routerLink="/order">Order</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -26,7 +26,7 @@
       >
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <a mat-button [href]="user ? '/home' : ''" style="font-size: larger"
+      <a mat-button [routerLink]="user ? '/home' : ''" style="font-size: larger"
         >Investo</a
       >
       <span class="spacer"></span>

@@ -6,7 +6,11 @@
       <mat-card-subtitle>Browse your wallets or add new ones</mat-card-subtitle>
     </mat-card-header>
     <mat-card-content
-      ><mat-card *ngFor="let wallet of wallets" class="wallet-card">
+      ><mat-card
+        *ngFor="let wallet of wallets; let i = index"
+        class="wallet-card"
+        [@fade]="{ value: '', params: { delay: delay * i } }"
+      >
         <mat-card-header>
           <div mat-card-avatar class="wallet-icon">
             <span class="material-icons"> account_balance_wallet </span>
@@ -17,19 +21,44 @@
           <mat-card-subtitle>{{ wallet.description }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          {{ wallet.initMoney | currency }}
+          <div class="wallet-details">
+            <div class="wallet-detail">
+              <strong>Available funds</strong>
+              <div class="summary-price" style="font-size: 24px">
+                {{ wallet.balance | currency }}
+              </div>
+            </div>
+            <div class="wallet-detail">
+              <strong>Owned stocks value</strong>
+              <div class="summary-price" style="font-size: 24px">
+                {{ walletValue(wallet) | currency }}
+              </div>
+            </div>
+            <div class="wallet-detail">
+              <strong>Wallet value change</strong>
+              <div class="summary-price" style="font-size: 24px">
+                {{ walletChange(wallet) | percent: '1.2-2' }}
+              </div>
+            </div>
+          </div>
         </mat-card-content>
         <mat-card-actions>
-          <button mat-button color="primary">Select</button>
+          <button
+            mat-button
+            color="primary"
+            [routerLink]="['/wallets', wallet.walletId]"
+          >
+            Details
+          </button>
           <button mat-button color="warn" (click)="onRemoveWallet(wallet)">
-            Remove
+            <mat-icon>delete</mat-icon> Remove
           </button>
         </mat-card-actions></mat-card
       >
     </mat-card-content>
     <div class="add-button">
-      <button mat-fab (click)="openAddingWallet()">
-        <mat-icon>add</mat-icon>
+      <button mat-raised-button color="accent" (click)="openAddingWallet()">
+        <mat-icon>add</mat-icon> Create new wallet
       </button>
     </div>
   </mat-card>

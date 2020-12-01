@@ -1,4 +1,5 @@
 export interface StockShort {
+  stockId: number;
   symbol: string;
   name: string;
   price: number;

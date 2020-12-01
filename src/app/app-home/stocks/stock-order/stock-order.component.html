@@ -1,37 +1,178 @@
 <div class="grid-container">
   <h1 class="mat-h1">Order</h1>
-  <mat-card class="main-card">
-    <mat-card-header>
-      <mat-card-title> Make an order </mat-card-title>
-      <mat-card-subtitle
-        >Buy new stocks or sell ones from your wallet</mat-card-subtitle
-      >
-    </mat-card-header>
-    {{ stock?.price }}
-    <mat-card-content>
-      <!-- <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let option of options" [value]="option">
-          {{ option }}
-        </mat-option>
-      </mat-autocomplete> -->
-      <div class="example-container">
-        <mat-form-field appearance="fill">
-          <mat-label>Input</mat-label>
-          <input matInput />
-        </mat-form-field>
-        <br />
-        <mat-form-field appearance="fill">
-          <mat-label>Select</mat-label>
-          <mat-select>
-            <mat-option value="option">Option</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <br />
-        <mat-form-field appearance="fill">
-          <mat-label>Textarea</mat-label>
-          <textarea matInput></textarea>
-        </mat-form-field>
+  <mat-grid-list [cols]="cols" rowHeight="280px">
+    <mat-grid-tile [colspan]="1" [rowspan]="2" class="tile">
+      <div class="order">
+        <mat-card class="main-card">
+          <mat-card-header>
+            <mat-card-title> Make an order </mat-card-title>
+            <mat-card-subtitle
+              >Buy new stocks or sell ones from your wallet</mat-card-subtitle
+            >
+          </mat-card-header>
+          <div *ngIf="selectedWallet">
+            <mat-card-content>
+              <mat-form-field class="input-width">
+                <mat-label>Choose a wallet</mat-label>
+                <mat-select
+                  (selectionChange)="walletChange($event)"
+                  [value]="selectedWallet"
+                  required
+                >
+                  <mat-option *ngFor="let wallet of wallets" [value]="wallet">
+                    {{ wallet.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <br />
+
+              <mat-form-field class="input-width">
+                <input
+                  required
+                  type="text"
+                  placeholder="Choose stock"
+                  aria-label="Number"
+                  matInput
+                  [formControl]="stockControl"
+                  [matAutocomplete]="auto"
+                />
+                <mat-error *ngIf="stockControl.errors">
+                  You must choose a stock
+                </mat-error>
+                <mat-autocomplete
+                  #auto="matAutocomplete"
+                  (optionSelected)="getSelectedStock($event.option.value)"
+                >
+                  <mat-option
+                    *ngFor="let stock of filteredOptions | async"
+                    [value]="stock.symbol"
+                  >
+                    <!-- <img
+                      class="option-img"
+                      aria-hidden
+                      [src]="stock.image"
+                      height="32"
+                      width="32"
+                    /> -->
+                    {{ stock.symbol }} |
+                    <small>{{ stock.price | currency }}</small>
+                    <span *ngIf="action === 'sell'">
+                      | {{ getAmount(stock) }}</span
+                    >
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+              <br />
+              <label id="radio-action-label">Choose action</label>
+              <mat-radio-group
+                aria-labelledby="radio-group-label"
+                class="radio-group"
+                (change)="actionChange($event)"
+              >
+                <mat-radio-button value="buy" [checked]="action === 'buy'"
+                  >Buy</mat-radio-button
+                >
+                <mat-radio-button value="sell" [checked]="action === 'sell'"
+                  >Sell</mat-radio-button
+                >
+              </mat-radio-group>
+              <form>
+                <mat-form-field appearance="outline" class="input-width">
+                  <mat-label>Amount</mat-label>
+                  <input matInput type="number" [formControl]="amountControl" />
+                  <mat-error *ngIf="amountControl.invalid">
+                    Amount can not be empty or less than 1
+                  </mat-error>
+                </mat-form-field>
+              </form>
+              <br />
+              <mat-form-field appearance="outline" class="input-width">
+                <mat-label>Order type</mat-label>
+                <mat-select [disabled]="true">
+                  <mat-option value="option">Market price</mat-option>
+                  <mat-option value="option">Limit</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </mat-card-content>
+          </div>
+          <div *ngIf="wallets && wallets.length < 1">
+            <button
+              mat-raised-button
+              color="accent"
+              routerLink="/wallets"
+              style="margin-left: 20px"
+            >
+              Create a wallet
+            </button>
+          </div>
+        </mat-card>
       </div>
-    </mat-card-content>
-  </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="1" [rowspan]="2" class="tile">
+      <div class="order">
+        <mat-card class="summary-card">
+          <mat-card-header>
+            <mat-card-title> Your order summary </mat-card-title>
+            <mat-card-subtitle>Take a look on your order</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content class="summary">
+            <strong>Stock symbol </strong>
+            <div class="summary-text">
+              {{ selectedStock ? selectedStock.symbol : 'none' }}
+            </div>
+            <strong>Amount </strong>
+            <div class="summary-text">
+              {{ amountControl.value ? amountControl.value : 'none' }}
+            </div>
+            <strong>Order type </strong>
+            <div class="summary-text">Market Order</div>
+            <mat-divider></mat-divider>
+            <div *ngIf="selectedWallet" style="margin-top: 10px">
+              <strong>Chosen wallet </strong>
+              <div class="summary-price">
+                {{ selectedWallet?.name }}
+              </div>
+              <strong>Wallet balance </strong>
+              <div class="summary-price">
+                {{ selectedWallet?.balance | currency }}
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <div
+              *ngIf="selectedStock && amountControl.value"
+              style="margin-top: 10px"
+            >
+              <strong>Wallet balance after order</strong>
+              <div class="summary-price">
+                {{
+                  (action === 'buy'
+                    ? selectedWallet?.balance -
+                      selectedStock?.price * amountControl.value
+                    : selectedWallet?.balance +
+                      selectedStock?.price * amountControl.value
+                  ) | currency
+                }}
+              </div>
+              <strong>Estimated order value </strong>
+              <div class="summary-price" style="font-size: 24px">
+                {{ selectedStock?.price * amountControl.value | currency }}
+              </div>
+            </div>
+          </mat-card-content>
+          <mat-card-actions class="submit-button">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="onSubmit()"
+              style="margin-bottom: 20px"
+              [disabled]="submitted"
+            >
+              Submit your order
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>

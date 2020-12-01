@@ -5,28 +5,15 @@ import {
   HttpEvent,
   HttpInterceptor,
 } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AccountService } from './../services/accout.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private accountService: AccountService) {}
-
-  transformError(err: { [key: string]: any }) {
-    const messages: string[] = [];
-
-    if (err) {
-      for (let key in err) {
-        for (let message of err[key]) {
-          messages.push(`${key}: ${message}`);
-        }
-      }
-    }
-
-    return messages;
-  }
+  constructor(private accountService: AccountService, private router: Router) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -35,10 +22,10 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         if (err.status === 401) {
-          // auto logout if 401 response returned from api
           this.accountService.logout();
         }
-        return throwError(this.transformError(err.error.errors));
+        //this.router.navigate(['/error']);
+        return throwError(of([err]));
       })
     );
   }
