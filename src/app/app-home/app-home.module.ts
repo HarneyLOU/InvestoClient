@@ -13,7 +13,10 @@ import { StockCardComponent } from './stocks/stock-card/stock-card.component';
 import { WalletsComponent } from './wallets/wallets.component';
 import { StartupComponent } from './startup/startup.component';
 import { AddWalletComponent } from './wallets/add-wallet/add-wallet.component';
-import { WalletComponent } from './wallets/wallet/wallet.component';
+import {
+  AddFundsDialog,
+  WalletComponent,
+} from './wallets/wallet/wallet.component';
 import { StockOrderComponent } from './stocks/stock-order/stock-order.component';
 import { ErrorComponent } from './error/error.component';
 import { StocksTableComponent } from './tables/stocks-table/stocks-table.component';
@@ -22,6 +25,9 @@ import { StockDetailsComponent } from './stocks/stock-details/stock-details.comp
 import { LineChartComponent } from './charts/line-chart/line-chart.component';
 import { LineChartDailyComponent } from './charts/line-chart-daily/line-chart-daily.component';
 import { CandleChartComponent } from './charts/candle-chart/candle-chart.component';
+import { TeamsComponent } from './teams/teams.component';
+import { TeamComponent } from './teams/team/team.component';
+import { CreateTeamComponent } from './teams/create-team/create-team.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +48,10 @@ import { CandleChartComponent } from './charts/candle-chart/candle-chart.compone
     LineChartComponent,
     LineChartDailyComponent,
     CandleChartComponent,
+    AddFundsDialog,
+    TeamsComponent,
+    TeamComponent,
+    CreateTeamComponent,
   ],
   imports: [
     AppMaterialModule,

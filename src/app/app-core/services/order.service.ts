@@ -35,4 +35,11 @@ export class OrderService {
       this.httpOptions
     );
   }
+
+  public cancelOrder(orderId: number): Observable<Order> {
+    return this.http.get<Order>(
+      this.apiUrl + '/order/cancel/' + orderId.toString(),
+      this.httpOptions
+    );
+  }
 }

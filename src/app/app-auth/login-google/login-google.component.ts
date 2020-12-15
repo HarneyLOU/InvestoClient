@@ -25,9 +25,7 @@ export class LoginGoogleComponent implements AfterViewInit, OnInit, OnDestroy {
     private accountService: AccountService
   ) {}
 
-  ngOnDestroy(): void {
-    console.log('PAPA');
-  }
+  ngOnDestroy(): void {}
 
   ngOnInit() {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';

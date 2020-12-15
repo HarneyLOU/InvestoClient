@@ -1,4 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+} from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Order } from 'src/app/app-core/models/Order';
 import { Wallet } from 'src/app/app-core/models/Wallet';
@@ -19,7 +24,8 @@ export class WalletComponent implements OnInit {
     private walletService: WalletService,
     private orderService: OrderService,
     private stockCurrentService: StockCurrentService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -52,5 +58,39 @@ export class WalletComponent implements OnInit {
       return (wallet.balance + wallet.value) / wallet.initMoney - 1;
     }
     return 0;
+  }
+
+  addFunds() {
+    const dialogRef = this.dialog.open(AddFundsDialog);
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (!isNaN(+result)) {
+        this.wallet.initMoney += result;
+        this.wallet.balance += result;
+        this.walletService.updateUserWallet(this.wallet).subscribe();
+      }
+    });
+  }
+}
+
+@Component({
+  selector: 'add-funds-dialog',
+  template: `<h1 mat-dialog-title>Add funds</h1>
+    <div mat-dialog-content>
+      <mat-form-field>
+        <mat-label>Funds</mat-label>
+        <input matInput [(ngModel)]="funds" type="number" />
+      </mat-form-field>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="onNoClick()">Cancel</button>
+      <button mat-button [mat-dialog-close]="funds">Ok</button>
+    </div>`,
+})
+export class AddFundsDialog {
+  funds: number;
+  constructor(public dialogRef: MatDialogRef<AddFundsDialog>) {}
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }

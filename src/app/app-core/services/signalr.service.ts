@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@aspnet/signalr';
 import { StockCurrentService } from './stock-current.service';
+import { MarketService } from './market.service';
 import { StockCurrent } from './../models/StockCurrent';
 
 @Injectable({
@@ -9,7 +10,10 @@ import { StockCurrent } from './../models/StockCurrent';
 export class SignalrService {
   private hubConnection: signalR.HubConnection;
 
-  constructor(private stockCurrentService: StockCurrentService) {}
+  constructor(
+    private stockCurrentService: StockCurrentService,
+    private marketService: MarketService
+  ) {}
 
   public startConnection = () => {
     this.hubConnection = new signalR.HubConnectionBuilder()
@@ -33,7 +37,12 @@ export class SignalrService {
         };
         this.stockCurrentService.update(stock);
       }
-      // console.log(data);
+    });
+  };
+
+  public ListenMarketStatusUpdate = () => {
+    this.hubConnection.on('marketstatus', (data) => {
+      this.marketService.setMarketStatus(data);
     });
   };
 }

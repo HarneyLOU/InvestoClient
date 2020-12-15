@@ -6,44 +6,121 @@
         <h1 style="font-weight: bold">{{ company?.name }}</h1>
       </mat-card-title>
       <mat-card-subtitle
-        >Additional informations about chosen stock</mat-card-subtitle
+        >Additional information about chosen stock</mat-card-subtitle
       >
     </mat-card-header>
     <mat-card-content>
-      <mat-button-toggle-group
-        name="chart"
-        aria-label="Chart"
-        (change)="onChartChange($event)"
-      >
-        <mat-button-toggle [checked]="true" value="intraday"
-          >Intraday</mat-button-toggle
+      <div class="chart-card">
+        <div class="chart-toggles">
+          <mat-button-toggle-group
+            name="chart"
+            aria-label="Chart"
+            (change)="onChartChange($event)"
+          >
+            <mat-button-toggle [checked]="true" value="intraday"
+              >Intraday</mat-button-toggle
+            >
+            <mat-button-toggle value="daily">Daily</mat-button-toggle>
+            <mat-button-toggle value="candles">Candles</mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+        <div
+          class="charts"
+          *ngIf="company && checkIfChartIsLoaded(); else elseBlock"
         >
-        <mat-button-toggle value="daily">Daily</mat-button-toggle>
-        <mat-button-toggle value="candles">Candles</mat-button-toggle>
-      </mat-button-toggle-group>
-      <div
-        class="charts"
-        *ngIf="company && checkIfChartIsLoaded(); else elseBlock"
-      >
-        <app-line-chart
-          *ngIf="selectedChart === 'intraday'"
-          [company]="company"
-          [data]="intradayData"
-        ></app-line-chart>
-        <app-line-chart-daily
-          *ngIf="selectedChart === 'daily'"
-          [company]="company"
-          [data]="dailyData"
-        ></app-line-chart-daily>
-        <app-candle-chart
-          *ngIf="selectedChart === 'candles'"
-          [company]="company"
-          [data]="candlesData"
-        ></app-candle-chart>
+          <app-line-chart
+            *ngIf="selectedChart === 'intraday'"
+            [company]="company"
+            [data]="intradayData"
+          ></app-line-chart>
+          <app-line-chart-daily
+            *ngIf="selectedChart === 'daily'"
+            [company]="company"
+            [data]="dailyData"
+          ></app-line-chart-daily>
+          <app-candle-chart
+            *ngIf="selectedChart === 'candles'"
+            [company]="company"
+            [data]="candlesData"
+          ></app-candle-chart>
+        </div>
       </div>
-      <ng-template #elseBlock style="margin: 50px">
-        <mat-spinner></mat-spinner>
-      </ng-template>
+      <div class="details-card">
+        <mat-accordion class="headers-align" multi>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Symbol</mat-panel-title>
+              <mat-panel-description>
+                <strong> {{ company?.symbol }}</strong>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Exchange</mat-panel-title>
+              <mat-panel-description>
+                <strong> {{ company?.exchange }}</strong>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Industry</mat-panel-title>
+              <mat-panel-description>
+                <strong> {{ company?.industry }}</strong>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Market Capitalization</mat-panel-title>
+              <mat-panel-description>
+                <strong> {{ company?.marketCap | currency }}</strong>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Market Index</mat-panel-title>
+              <mat-panel-description>
+                <strong> {{ company?.marketIndex }}</strong>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+          </mat-expansion-panel>
+          <mat-expansion-panel hideToggle>
+            <mat-expansion-panel-header>
+              <mat-panel-title>IPO Date</mat-panel-title>
+              <mat-panel-description>
+                <strong> {{ company?.ipoDate | date: 'short' }}</strong>
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+          </mat-expansion-panel>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>Site</mat-panel-title>
+            </mat-expansion-panel-header>
+            <a [href]="company?.url" target="_blank"
+              ><strong>{{ company?.url }}</strong></a
+            >
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+      <mat-expansion-panel style="margin-top: 20px">
+        <mat-expansion-panel-header>
+          <mat-panel-title> More details </mat-panel-title>
+          <mat-panel-description>
+            <strong> Stock description</strong>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="mat-h3">
+          {{ company?.description }}
+        </div>
+      </mat-expansion-panel>
     </mat-card-content>
   </mat-card>
 </div>
+<ng-template #elseBlock>
+  <div class="spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+</ng-template>

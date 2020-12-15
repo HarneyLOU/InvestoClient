@@ -23,7 +23,11 @@
         </div>
         <div class="wallet-detail">
           <strong>Wallet value change</strong>
-          <div class="summary-price" style="font-size: 24px">
+          <div
+            [ngClass]="walletChange(wallet) >= 0 ? 'plus' : 'minus'"
+            class="summary-price"
+            style="font-size: 24px"
+          >
             {{ walletChange(wallet) | percent: '1.2-2' }}
           </div>
         </div>
@@ -41,6 +45,9 @@
         </div>
       </div>
     </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="addFunds()">Add funds</button>
+    </mat-card-actions>
   </mat-card>
   <mat-card class="main-card">
     <mat-card-header>

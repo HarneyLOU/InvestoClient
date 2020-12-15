@@ -1,0 +1,58 @@
+<div class="grid-container">
+  <h1 class="mat-h1">Teams</h1>
+  <div class="teams-cards">
+    <mat-card class="main-card">
+      <mat-card-header>
+        <mat-card-title> Your teams </mat-card-title>
+        <mat-card-subtitle>Browse your teams</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div *ngFor="let team of teams">{{ team.name }} {{ team.code }}</div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="main-card">
+      <mat-card-header>
+        <mat-card-title> Join</mat-card-title>
+        <mat-card-subtitle>You need code to join the team</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field>
+          <mat-label>Type your code</mat-label>
+          <input matInput type="text" [formControl]="joinControl" />
+          <mat-error *ngIf="joinControl.invalid">Not valid code</mat-error>
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          style="margin-left: 20px"
+          (click)="onJoin()"
+        >
+          Join
+        </button>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="main-card">
+      <mat-card-header>
+        <mat-card-title> Create new </mat-card-title>
+        <mat-card-subtitle>Organize a new team</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-form-field>
+          <mat-label>Choose a name</mat-label>
+          <input matInput type="text" [formControl]="nameControl" />
+          <mat-error *ngIf="nameControl.invalid"
+            >At least 5 characters needed</mat-error
+          >
+        </mat-form-field>
+        <button
+          mat-raised-button
+          color="primary"
+          style="margin-left: 20px"
+          (click)="onCreate()"
+        >
+          Create
+        </button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

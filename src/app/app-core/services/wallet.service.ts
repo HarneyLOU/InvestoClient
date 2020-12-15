@@ -49,7 +49,7 @@ export class WalletService {
 
   public updateUserWallet(wallet: Wallet): Observable<Wallet> {
     return this.http.put<Wallet>(
-      this.apiUrl + '/wallet',
+      this.apiUrl + '/wallet/' + wallet.walletId.toString(),
       wallet,
       this.httpOptions
     );

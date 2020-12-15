@@ -18,8 +18,9 @@ export class LineChartComponent implements OnInit {
   ngOnInit(): void {
     const chartData = [];
     for (let stock of this.data) {
+      let date = stock.date.toString();
       chartData.push({
-        time: stock.date,
+        time: date.split('T')[0],
         value: stock.close,
       });
     }

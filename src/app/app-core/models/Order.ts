@@ -5,7 +5,9 @@ export interface Order {
   symbol?: string;
   amount: number;
   buy: boolean;
-  type?: string;
+  limit?: number;
+  activationDate?: Date;
+  expiryDate?: Date;
   transactions?: Transaction[];
   status?: string;
   created?: Date;
