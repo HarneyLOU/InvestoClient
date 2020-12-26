@@ -18,8 +18,9 @@ export class CandleChartComponent implements OnInit {
   ngOnInit(): void {
     const chartData = [];
     for (let stock of this.data) {
+      let date = stock.date.toString();
       chartData.push({
-        time: stock.date,
+        time: date.split('T')[0],
         open: stock.open,
         close: stock.close,
         low: stock.low,

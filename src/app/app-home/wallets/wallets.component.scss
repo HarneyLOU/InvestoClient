@@ -29,7 +29,6 @@ mat-card-content {
 
 .summary-price {
   font-size: 24px;
-  color: gray;
 }
 
 strong {
@@ -39,4 +38,12 @@ strong {
 mat-card-actions {
   display: flex;
   justify-content: space-between;
+}
+
+.plus {
+  color: green;
+}
+
+.minus {
+  color: red;
 }

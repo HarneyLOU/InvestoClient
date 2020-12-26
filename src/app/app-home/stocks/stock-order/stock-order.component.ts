@@ -26,7 +26,14 @@ export class StockOrderComponent implements OnInit {
   selectedStock: StockShort;
 
   stockControl = new FormControl('', [Validators.required]);
-  amountControl = new FormControl('', [Validators.min(1), Validators.required]);
+  amountControl = new FormControl('0', [
+    Validators.min(1),
+    Validators.required,
+  ]);
+  limitControl = new FormControl('');
+  activationControl = new FormControl('');
+  expirationControl = new FormControl('');
+
   wallets: Wallet[];
   selectedWallet: Wallet;
   walletId: number;
@@ -35,6 +42,9 @@ export class StockOrderComponent implements OnInit {
   rows: number;
 
   submitted = false;
+  checkedLimit = false;
+  checkedActivate = false;
+  checkedExpire = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -49,6 +59,7 @@ export class StockOrderComponent implements OnInit {
   public getSelectedStock(selected: string): void {
     this.stockCurrentService.getStock(selected).subscribe((data) => {
       this.selectedStock = data;
+      this.setValidators();
     });
   }
 
@@ -56,14 +67,31 @@ export class StockOrderComponent implements OnInit {
     this.selectedWallet = this.wallets.find(
       (w) => w.walletId === event.value.walletId
     );
-    this.filterStocks();
+    this.selectedStock = null;
+    this.stockControl.setValue(null);
   }
 
   actionChange(event: any): any {
     this.action = event.value;
-    this.filterStocks();
     this.selectedStock = null;
     this.stockControl.setValue(null);
+  }
+
+  setValidators() {
+    if (this.action === 'sell') {
+      const maxAmount = this.getAmount(this.selectedStock);
+      this.amountControl.setValidators([
+        Validators.min(1),
+        Validators.required,
+        Validators.max(maxAmount),
+      ]);
+    } else {
+      this.amountControl.setValidators([
+        Validators.min(1),
+        Validators.required,
+      ]);
+    }
+    this.amountControl.updateValueAndValidity();
   }
 
   ngOnInit(): void {
@@ -72,12 +100,12 @@ export class StockOrderComponent implements OnInit {
     this.action = this.route.snapshot.queryParamMap.get('action') ?? 'buy';
     this.stockControl.setValue(this.symbol);
     this.getSelectedStock(this.symbol);
-
     this.stockCurrentService.getAll().subscribe((stocksData) => {
       this.stocks = stocksData;
       this.walletService.getUserWallets().subscribe((walletsData) => {
         this.wallets = walletsData;
         this.selectedWallet = this.getRightWallet();
+        this.setValidators();
         this.filteredOptions = this.stockControl.valueChanges.pipe(
           startWith(''),
           map((value) => this._filter(value))
@@ -100,14 +128,8 @@ export class StockOrderComponent implements OnInit {
       });
   }
 
-  private filterStocks(): void {
-    this.filteredOptions = this.filteredOptions.pipe(
-      startWith(''),
-      map((value) => this._filter(''))
-    );
-  }
-
   private _filter(value: string): StockShort[] {
+    if (!value) value = '';
     const filterValue = value.toLowerCase();
     return this.stocks?.filter(
       (option) =>
@@ -124,7 +146,14 @@ export class StockOrderComponent implements OnInit {
       this.amountControl.invalid ||
       this.stockControl.invalid ||
       this.selectedStock == null ||
-      this.selectedWallet == null
+      this.selectedWallet == null ||
+      (this.checkedActivate &&
+        (this.activationControl.invalid ||
+          this.activationControl.value == '')) ||
+      (this.checkedExpire &&
+        (this.expirationControl.invalid ||
+          this.activationControl.value == '')) ||
+      (this.checkedLimit && this.limitControl.value == '')
     ) {
       this.openSnackBar('Please fill your order', 'Close');
       return;
@@ -134,6 +163,11 @@ export class StockOrderComponent implements OnInit {
       stockId: this.selectedStock.stockId,
       walletId: this.selectedWallet.walletId,
       buy: this.action === 'buy' ? true : false,
+      limit: this.checkedLimit ? +this.limitControl.value : null,
+      activationDate: this.checkedActivate
+        ? this.activationControl.value
+        : null,
+      expiryDate: this.checkedExpire ? this.expirationControl.value : null,
     };
     this.submitted = true;
     this.orderService.addOrder(order).subscribe((data) => {
@@ -154,9 +188,10 @@ export class StockOrderComponent implements OnInit {
   }
 
   getAmount(stock: StockShort): number {
-    return this.selectedWallet?.possesions.find(
+    var s = this.selectedWallet?.possesions.find(
       (s) => s.symbol === stock.symbol
-    ).amount;
+    );
+    if (s != undefined) return s.amount;
   }
 
   getRightWallet(): Wallet {

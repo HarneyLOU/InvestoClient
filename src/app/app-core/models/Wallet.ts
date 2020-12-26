@@ -10,4 +10,5 @@ export interface Wallet {
   created?: Date;
   possesions?: WalletState[];
   value?: number;
+  teamId?: number;
 }

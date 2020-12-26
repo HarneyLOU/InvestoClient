@@ -32,7 +32,7 @@
           <p>{{ stock.open | currency }}</p>
         </div>
         <div class="change">
-          <div [className]="isOnPlus ? 'plus' : 'minus'">
+          <div [ngClass]="change() >= 0 ? 'plus' : 'minus'">
             <p>
               {{ change() | percent: '1.2-2' }}
             </p>

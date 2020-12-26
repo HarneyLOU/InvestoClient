@@ -1,1 +1,36 @@
-<p>home works!</p>
+<mat-card class="status-card"
+  >Current market status
+  <div class="mat-display-1">{{ marketStatus }}</div></mat-card
+>
+<mat-card class="news-cards">
+  <div class="news">
+    <mat-card *ngFor="let new of selectedNews" class="news-card">
+      <img mat-card-image [src]="new.image" alt="News image" />
+      <mat-card-header>
+        <mat-card-title>{{
+          new.title.length > 70 ? (new.title | slice: 0:70) + '...' : new.title
+        }}</mat-card-title>
+        <mat-card-subtitle>{{ new.site }} </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p>
+          {{
+            new.text.length > 200 ? (new.text | slice: 0:200) + '...' : new.text
+          }}
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <a mat-button [href]="new.url"> VISIT </a>
+        <span style="position: absolute; right: 10px; color: gray">{{
+          new.publishedDate | date: 'short'
+        }}</span>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+  <mat-paginator
+    [length]="news?.length"
+    [pageSize]="3"
+    (page)="getNews($event)"
+  >
+  </mat-paginator>
+</mat-card>

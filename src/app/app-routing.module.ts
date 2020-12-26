@@ -12,6 +12,7 @@ import { AuthGuard } from './app-core/helpers/auth-guard';
 import { StartupComponent } from './app-home/startup/startup.component';
 import { ErrorComponent } from './app-home/error/error.component';
 import { StockDetailsComponent } from './app-home/stocks/stock-details/stock-details.component';
+import { TeamsComponent } from './app-home/teams/teams.component';
 
 const appAuthModule = () =>
   import('./app-auth/app-auth.module').then((x) => x.AppAuthModule);
@@ -32,6 +33,7 @@ const routes: Routes = [
     component: StockDetailsComponent,
     canActivate: [AuthGuard],
   },
+  { path: 'teams', component: TeamsComponent, canActivate: [AuthGuard] },
   { path: 'order', component: StockOrderComponent, canActivate: [AuthGuard] },
   { path: 'error', component: ErrorComponent },
   { path: 'auth', loadChildren: appAuthModule },

@@ -30,6 +30,10 @@
   width: 100%;
 }
 
+input-width-half {
+  width: 50%;
+}
+
 .radio-group {
   display: flex;
   flex-direction: row;
@@ -64,4 +68,19 @@ mat-radio-button {
 
 .submit-button {
   text-align: center;
+}
+
+.margin {
+  margin-left: 20px;
+}
+
+.adds {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.input-width-third {
+  width: 30%;
 }

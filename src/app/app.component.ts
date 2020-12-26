@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
 
     this.signalrService.startConnection();
     this.signalrService.ListenStockUpdate();
+    this.signalrService.ListenMarketStatusUpdate();
   }
 
   logout() {

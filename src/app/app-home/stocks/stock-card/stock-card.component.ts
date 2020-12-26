@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, DoCheck } from '@angular/core';
 import { trigger, style, animate, transition } from '@angular/animations';
 import { StockShort } from 'src/app/app-core/models/StockShort';
 
@@ -19,19 +19,27 @@ import { StockShort } from 'src/app/app-core/models/StockShort';
     ]),
   ],
 })
-export class StockCardComponent implements OnInit {
+export class StockCardComponent implements OnInit, DoCheck {
   @Input() stock: StockShort;
   @Input() delay = 0;
   isOnPlus: boolean;
   constructor() {}
-  ngOnInit(): void {
-    this.isOnPlus = this.stock.change >= 0 ? true : false;
+
+  ngOnInit(): void {}
+
+  ngDoCheck() {
+    if (this.stock.price < this.stock.low) {
+      this.stock.low = this.stock.price;
+    }
+    if (this.stock.price > this.stock.high) {
+      this.stock.high = this.stock.price;
+    }
   }
 
   change() {
     const change =
       (this.stock.price - this.stock.prevClose) / this.stock.prevClose;
-    this.isOnPlus = change >= 0 ? true : false;
+
     return change;
   }
 }

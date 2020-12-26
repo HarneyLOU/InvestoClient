@@ -5,8 +5,18 @@
       <mat-card-title> Manage your wallets </mat-card-title>
       <mat-card-subtitle>Browse your wallets or add new ones</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content
-      ><mat-card
+    <mat-card-content>
+      <div class="add-button">
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="openAddingWallet()"
+          style="margin-left: 20px"
+        >
+          Create new wallet
+        </button>
+      </div>
+      <mat-card
         *ngFor="let wallet of wallets; let i = index"
         class="wallet-card"
         [@fade]="{ value: '', params: { delay: delay * i } }"
@@ -15,28 +25,35 @@
           <div mat-card-avatar class="wallet-icon">
             <span class="material-icons"> account_balance_wallet </span>
           </div>
-          <mat-card-title class="mat-display-1" style="font-weight: bold">{{
-            wallet.name
-          }}</mat-card-title>
+          <mat-card-title class="mat-display-1" style="font-weight: bold"
+            >{{ wallet.name }}
+            <span *ngIf="wallet.teamId">[PUBLIC]</span></mat-card-title
+          >
           <mat-card-subtitle>{{ wallet.description }}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="wallet-details">
             <div class="wallet-detail">
-              <strong>Available funds</strong>
+              <strong>Wallet value</strong>
               <div class="summary-price" style="font-size: 24px">
-                {{ wallet.balance | currency }}
+                {{ wallet.balance + walletValue(wallet) | currency }}
               </div>
             </div>
             <div class="wallet-detail">
-              <strong>Owned stocks value</strong>
+              <strong>Gain/Loss</strong>
               <div class="summary-price" style="font-size: 24px">
-                {{ walletValue(wallet) | currency }}
+                {{
+                  wallet.balance + walletValue(wallet) - wallet.initMoney
+                    | currency
+                }}
               </div>
             </div>
             <div class="wallet-detail">
               <strong>Wallet value change</strong>
-              <div class="summary-price" style="font-size: 24px">
+              <div
+                [ngClass]="walletChange(wallet) >= 0 ? 'plus' : 'minus'"
+                class="summary-price"
+              >
                 {{ walletChange(wallet) | percent: '1.2-2' }}
               </div>
             </div>
@@ -56,10 +73,5 @@
         </mat-card-actions></mat-card
       >
     </mat-card-content>
-    <div class="add-button">
-      <button mat-raised-button color="accent" (click)="openAddingWallet()">
-        <mat-icon>add</mat-icon> Create new wallet
-      </button>
-    </div>
   </mat-card>
 </div>

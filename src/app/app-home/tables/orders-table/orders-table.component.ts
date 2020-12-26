@@ -6,10 +6,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Order } from 'src/app/app-core/models/Order';
-import { Wallet } from 'src/app/app-core/models/Wallet';
 import { OrderService } from 'src/app/app-core/services/order.service';
 
 export interface OrderTransaction {
+  orderId: number;
   position: number;
   symbol: string;
   singlePrice: number;
@@ -18,6 +18,9 @@ export interface OrderTransaction {
   transactionType: string;
   status: string;
   realised: Date;
+  limit: number;
+  activation: Date;
+  expiration: Date;
 }
 
 @Component({
@@ -37,8 +40,12 @@ export class OrdersTableComponent implements OnInit {
     'amount',
     'price',
     'transactionType',
+    'limit',
     'status',
+    'activation',
+    'expiration',
     'realised',
+    'action',
   ];
 
   dataSource: MatTableDataSource<OrderTransaction>;
@@ -56,6 +63,7 @@ export class OrdersTableComponent implements OnInit {
     for (const order of this.orders) {
       const transaction = order.transactions.pop();
       const orderTransaction: OrderTransaction = {
+        orderId: order.orderId,
         position: i,
         symbol: order.symbol,
         singlePrice: transaction
@@ -66,9 +74,22 @@ export class OrdersTableComponent implements OnInit {
         transactionType: order.buy ? 'Buy' : 'Sell',
         status: order.status,
         realised: transaction ? transaction.realised : order.created,
+        limit: order.limit ?? null,
+        activation: order.activationDate,
+        expiration: order.expiryDate,
       };
       this.dataSource.data.push(orderTransaction);
       i++;
     }
+  }
+
+  onCancel(value: number) {
+    this.orderService.cancelOrder(value).subscribe((data) => {
+      const order: Order = data;
+      if (order.status === 'Cancelled - on request') {
+        this.dataSource.data.find((o) => o.orderId === order.orderId).status =
+          order.status;
+      }
+    });
   }
 }

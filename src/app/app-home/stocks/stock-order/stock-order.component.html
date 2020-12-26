@@ -77,23 +77,85 @@
                   >Sell</mat-radio-button
                 >
               </mat-radio-group>
-              <form>
-                <mat-form-field appearance="outline" class="input-width">
-                  <mat-label>Amount</mat-label>
-                  <input matInput type="number" [formControl]="amountControl" />
-                  <mat-error *ngIf="amountControl.invalid">
-                    Amount can not be empty or less than 1
-                  </mat-error>
-                </mat-form-field>
-              </form>
-              <br />
-              <mat-form-field appearance="outline" class="input-width">
-                <mat-label>Order type</mat-label>
-                <mat-select [disabled]="true">
-                  <mat-option value="option">Market price</mat-option>
-                  <mat-option value="option">Limit</mat-option>
-                </mat-select>
+
+              <mat-form-field appearance="outline" class="input-width-half">
+                <mat-label>Amount</mat-label>
+                <input matInput type="number" [formControl]="amountControl" />
+                <mat-error *ngIf="amountControl.invalid">
+                  Invalid amount
+                </mat-error>
               </mat-form-field>
+              <span
+                style="margin-left: 30px; color: gray"
+                *ngIf="action === 'sell' && selectedStock"
+              >
+                <span>Available </span>
+                {{ getAmount(selectedStock) }}
+              </span>
+
+              <section
+                style="
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: space-around;
+                "
+              >
+                <mat-checkbox class="margin" [(ngModel)]="checkedLimit"
+                  >Order with limit</mat-checkbox
+                >
+                <mat-checkbox class="margin" [(ngModel)]="checkedActivate"
+                  >Activation date</mat-checkbox
+                >
+                <mat-checkbox class="margin" [(ngModel)]="checkedExpire"
+                  >Expiration date</mat-checkbox
+                >
+              </section>
+              <div class="adds">
+                <mat-form-field
+                  *ngIf="checkedLimit"
+                  appearance="fill"
+                  class="input-width-third"
+                >
+                  <mat-label>Limit</mat-label>
+                  <input matInput type="number" [formControl]="limitControl" />
+                </mat-form-field>
+                <mat-form-field
+                  *ngIf="checkedActivate"
+                  color="accent"
+                  appearance="fill"
+                  class="input-width-third"
+                >
+                  <mat-label>Activation date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker1"
+                    [formControl]="activationControl"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker1"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker1></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field
+                  *ngIf="checkedExpire"
+                  color="accent"
+                  appearance="fill"
+                  class="input-width-third"
+                >
+                  <mat-label>Expiration date</mat-label>
+                  <input
+                    matInput
+                    [matDatepicker]="picker2"
+                    [formControl]="expirationControl"
+                  />
+                  <mat-datepicker-toggle
+                    matSuffix
+                    [for]="picker2"
+                  ></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+              </div>
             </mat-card-content>
           </div>
           <div *ngIf="wallets && wallets.length < 1">
@@ -124,9 +186,10 @@
             <strong>Amount </strong>
             <div class="summary-text">
               {{ amountControl.value ? amountControl.value : 'none' }}
+              <span *ngIf="action === 'sell' && selectedStock">
+                of {{ getAmount(selectedStock) }}
+              </span>
             </div>
-            <strong>Order type </strong>
-            <div class="summary-text">Market Order</div>
             <mat-divider></mat-divider>
             <div *ngIf="selectedWallet" style="margin-top: 10px">
               <strong>Chosen wallet </strong>
