@@ -1,0 +1,77 @@
+<div class="grid-container">
+  <h1 class="mat-h1">Wallets</h1>
+  <mat-card class="main-card">
+    <mat-card-header>
+      <mat-card-title> Manage your wallets </mat-card-title>
+      <mat-card-subtitle>Browse your wallets or add new ones</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="add-button">
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="openAddingWallet()"
+          style="margin-left: 20px"
+        >
+          Create new wallet
+        </button>
+      </div>
+      <mat-card
+        *ngFor="let wallet of wallets; let i = index"
+        class="wallet-card"
+        [@fade]="{ value: '', params: { delay: delay * i } }"
+      >
+        <mat-card-header>
+          <div mat-card-avatar class="wallet-icon">
+            <span class="material-icons"> account_balance_wallet </span>
+          </div>
+          <mat-card-title class="mat-display-1" style="font-weight: bold"
+            >{{ wallet.name }}
+            <span *ngIf="wallet.teamId">[PUBLIC]</span></mat-card-title
+          >
+          <mat-card-subtitle>{{ wallet.description }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="wallet-details">
+            <div class="wallet-detail">
+              <strong>Wallet value</strong>
+              <div class="summary-price" style="font-size: 24px">
+                {{ wallet.balance + walletValue(wallet) | currency }}
+              </div>
+            </div>
+            <div class="wallet-detail">
+              <strong>Gain/Loss</strong>
+              <div class="summary-price" style="font-size: 24px">
+                {{
+                  wallet.balance + walletValue(wallet) - wallet.initMoney
+                    | currency
+                }}
+              </div>
+            </div>
+            <div class="wallet-detail">
+              <strong>Wallet value change</strong>
+              <div
+                [ngClass]="walletChange(wallet) >= 0 ? 'plus' : 'minus'"
+                class="summary-price"
+              >
+                {{ walletChange(wallet) | percent: '1.2-2' }}
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button
+            mat-button
+            color="primary"
+            [routerLink]="['/wallets', wallet.walletId]"
+          >
+            Details
+          </button>
+          <button mat-button color="warn" (click)="onRemoveWallet(wallet)">
+            <mat-icon>delete</mat-icon> Remove
+          </button>
+        </mat-card-actions></mat-card
+      >
+    </mat-card-content>
+  </mat-card>
+</div>

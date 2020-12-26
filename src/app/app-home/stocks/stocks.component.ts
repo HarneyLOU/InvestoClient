@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { SignalrService } from './../../app-core/services/signalr.service';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+
 import { StockCurrentService } from './../../app-core/services/stock-current.service';
 import { StockService } from './../../app-core/services/stock.service';
+import { StockShort } from 'src/app/app-core/models/StockShort';
 
 @Component({
   selector: 'app-stocks',
@@ -11,21 +14,35 @@ import { StockService } from './../../app-core/services/stock.service';
   styleUrls: ['./stocks.component.scss'],
 })
 export class StocksComponent implements OnInit {
-  stocks: any;
+  stocks: StockShort[];
   stocksPerRow: number;
+  delay = 100;
+
+  filteredOptions: Observable<StockShort[]>;
+
+  myControl = new FormControl('');
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private signalrService: SignalrService,
-    private stockCurrentService: StockCurrentService,
-    private stockService: StockService
+    private stockCurrentService: StockCurrentService
   ) {}
 
+  private _filter(value: string): StockShort[] {
+    const filterValue = value.toLowerCase();
+    return this.stocks.filter(
+      (option) =>
+        option.symbol.toLowerCase().includes(filterValue) ||
+        option.name.toLowerCase().includes(filterValue)
+    );
+  }
+
   ngOnInit(): void {
-    this.stockService.getStockShortAll().subscribe((data) => {
+    this.stockCurrentService.getAll().subscribe((data) => {
       this.stocks = data;
-      this.signalrService.startConnection();
-      this.signalrService.ListenStockUpdate(this.stocks);
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filter(value))
+      );
     });
     this.breakpointObserver
       .observe([
@@ -40,16 +57,16 @@ export class StocksComponent implements OnInit {
           this.stocksPerRow = 1;
         }
         if (result.breakpoints[Breakpoints.Small]) {
-          this.stocksPerRow = 2;
+          this.stocksPerRow = 1;
         }
         if (result.breakpoints[Breakpoints.Medium]) {
-          this.stocksPerRow = 3;
+          this.stocksPerRow = 2;
         }
         if (result.breakpoints[Breakpoints.Large]) {
-          this.stocksPerRow = 4;
+          this.stocksPerRow = 3;
         }
         if (result.breakpoints[Breakpoints.XLarge]) {
-          this.stocksPerRow = 6;
+          this.stocksPerRow = 4;
         }
       });
   }

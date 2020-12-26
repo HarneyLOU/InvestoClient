@@ -1,0 +1,78 @@
+<div class="grid-container">
+  <h1 class="mat-h1">Wallet {{ wallet?.name }}</h1>
+  <mat-card class="main-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h1 style="font-weight: bold">Summary</h1>
+      </mat-card-title>
+      <mat-card-subtitle>Your wallet summary</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="wallet-details">
+        <div class="wallet-detail">
+          <strong>Available funds</strong>
+          <div class="summary-price" style="font-size: 24px">
+            {{ wallet?.balance | currency }}
+          </div>
+        </div>
+        <div class="wallet-detail">
+          <strong>Owned stocks value</strong>
+          <div class="summary-price" style="font-size: 24px">
+            {{ walletValue(wallet) | currency }}
+          </div>
+        </div>
+        <div class="wallet-detail">
+          <strong>Wallet value change</strong>
+          <div
+            [ngClass]="walletChange(wallet) >= 0 ? 'plus' : 'minus'"
+            class="summary-price"
+            style="font-size: 24px"
+          >
+            {{ walletChange(wallet) | percent: '1.2-2' }}
+          </div>
+        </div>
+        <div class="wallet-detail">
+          <strong>Wallet initial funds</strong>
+          <div class="summary-price" style="font-size: 24px">
+            {{ wallet?.initMoney | currency }}
+          </div>
+        </div>
+        <div class="wallet-detail">
+          <strong>Created</strong>
+          <div class="summary-price" style="font-size: 24px">
+            {{ wallet?.created | date: 'short' }}
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button (click)="addFunds()">Add funds</button>
+    </mat-card-actions>
+  </mat-card>
+  <mat-card class="main-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h1 style="font-weight: bold">Your stocks</h1>
+      </mat-card-title>
+      <mat-card-subtitle>Check stocks you own</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <app-stocks-table
+        *ngIf="wallet"
+        [possesions]="wallet.possesions"
+        [wallet]="wallet"
+      ></app-stocks-table>
+    </mat-card-content>
+  </mat-card>
+  <mat-card class="main-card">
+    <mat-card-header>
+      <mat-card-title>
+        <h1 style="font-weight: bold">Your orders</h1>
+      </mat-card-title>
+      <mat-card-subtitle>Check your orders and transactions</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <app-orders-table *ngIf="orders" [orders]="orders"></app-orders-table>
+    </mat-card-content>
+  </mat-card>
+</div>

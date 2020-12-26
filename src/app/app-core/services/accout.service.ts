@@ -7,6 +7,8 @@ import { map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { User } from './../models/User';
 
+declare const gapi: any;
+
 @Injectable({ providedIn: 'root' })
 export class AccountService {
   private userSubject: BehaviorSubject<User>;
@@ -23,16 +25,32 @@ export class AccountService {
     return this.userSubject.value;
   }
 
-  login(username, password) {
+  login(email, password) {
     return this.http
       .post<User>(`${environment.apiUrl}/user/authenticate`, {
-        username,
+        email,
         password,
+      })
+      .pipe(
+        map((user) => {
+          localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('external', 'local');
+          this.userSubject.next(user);
+          return user;
+        })
+      );
+  }
+
+  loginWithGoogle(token) {
+    return this.http
+      .post<User>(`${environment.apiUrl}/user/authenticate-with-google`, {
+        token,
       })
       .pipe(
         map((user) => {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('user', JSON.stringify(user));
+          localStorage.setItem('external', 'google');
           this.userSubject.next(user);
           return user;
         })
@@ -44,6 +62,18 @@ export class AccountService {
     localStorage.removeItem('user');
     this.userSubject.next(null);
     this.router.navigate(['/account/login']);
+
+    // if (localStorage.getItem('external') === 'google') {
+    //   let auth2 = gapi.auth2.init({
+    //     client_id:
+    //       '1046162263305-iie4bj416r9oehqkrr5rgdluqrrqdg19.apps.googleusercontent.com',
+    //   });
+    //   auth2 = gapi.auth2.getAuthInstance();
+    //   auth2.signOut().then(function () {
+    //     console.log('User signed out.');
+    //   });
+    //   localStorage.removeItem('external');
+    // }
   }
 
   register(user: User) {

@@ -1,0 +1,40 @@
+.grid-container {
+  padding: 20px;
+}
+
+.main-card {
+  margin: 20px;
+  min-height: 80px;
+  width: 90%;
+}
+
+.wallet-details {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  line-height: 2em;
+}
+
+.wallet-detail {
+  text-align: center;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  margin: 5px;
+}
+
+.summary-price {
+  font-size: 18px;
+  color: gray;
+}
+
+strong {
+  font-size: 18px;
+}
+
+.plus {
+  color: green;
+}
+
+.minus {
+  color: red;
+}

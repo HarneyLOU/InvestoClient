@@ -1,0 +1,49 @@
+.grid-container {
+  padding: 20px;
+}
+
+.main-card {
+  margin: 20px;
+  min-height: 80px;
+  width: 90%;
+}
+
+mat-card-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.spinner {
+  width: 600px;
+  height: 300px;
+  padding: 50px;
+}
+
+.chart-card {
+  overflow: auto;
+}
+
+.chart-toggles {
+  text-align: center;
+  width: 100%;
+}
+
+.details-card {
+  margin: 20px;
+  width: 400px;
+}
+
+.charts {
+  margin: 10px;
+}
+
+.headers-align .mat-expansion-panel-header-title,
+.headers-align .mat-expansion-panel-header-description {
+  flex-basis: 0;
+}
+
+.headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
