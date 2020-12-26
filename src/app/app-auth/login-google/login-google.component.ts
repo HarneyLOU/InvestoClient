@@ -35,7 +35,7 @@ export class LoginGoogleComponent implements AfterViewInit, OnInit, OnDestroy {
     gapi.load('auth2', () => {
       this.auth2 = gapi.auth2.init({
         client_id:
-          '1046162263305-iie4bj416r9oehqkrr5rgdluqrrqdg19.apps.googleusercontent.com',
+          '1046162263305-bq46quqp3uju349omm64p2af8m7sftgj.apps.googleusercontent.com',
         prompt: 'select_account',
       });
       this.attachSignin(document.getElementById('googleBtn'));
