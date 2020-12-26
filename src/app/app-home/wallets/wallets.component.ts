@@ -5,6 +5,7 @@ import { WalletService } from './../../app-core/services/wallet.service';
 import { Wallet } from './../../app-core/models/Wallet';
 import { StockCurrentService } from 'src/app/app-core/services/stock-current.service';
 import { trigger, style, animate, transition } from '@angular/animations';
+
 @Component({
   selector: 'app-wallets',
   templateUrl: './wallets.component.html',
