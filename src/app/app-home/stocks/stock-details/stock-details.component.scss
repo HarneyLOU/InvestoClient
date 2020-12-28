@@ -3,9 +3,9 @@
 }
 
 .main-card {
-  //margin: 20px;
+  margin: auto;
   min-height: 80px;
-  width: 90%;
+  width: 100%;
 }
 
 mat-card-content {
@@ -30,8 +30,8 @@ mat-card-content {
 }
 
 .details-card {
-  //margin: 20px;
-  //width: 400px;
+  margin: auto;
+  max-width: 100%;
 }
 
 .charts {
