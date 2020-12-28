@@ -6,6 +6,7 @@
     [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false && user"
+    (click)="drawer.mode === 'side' || drawer.close()"
   >
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
@@ -32,15 +33,18 @@
       >
       <span class="spacer"></span>
       <div *ngIf="user; else elseBlock">
-        <a mat-list-item style="font-size: medium; margin-right: 20px"
-          >Logged as {{ user.email }}</a
+        <div
+          *ngIf="(isHandset$ | async) == false"
+          style="display: inline-block"
         >
-        <a mat-button (click)="logout()" style="position: absolute; right: 10px"
-          >Sign Out</a
-        >
+          <a mat-list-item style="font-size: medium"
+            >Logged as {{ user.email }}</a
+          >
+        </div>
+        <a mat-button (click)="logout()">Sign Out</a>
       </div>
-      <ng-template #elseBlock
-        ><a mat-button routerLink="auth/login" style="font-size: large"
+      <ng-template #elseBlock style="display: inline-block"
+        ><a mat-button routerLink="auth/login" style="font-size: larger"
           >Sign In</a
         ></ng-template
       >

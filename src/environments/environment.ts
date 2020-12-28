@@ -4,10 +4,10 @@
 
 export const environment = {
   production: false,
-  // apiUrl: 'https://localhost:5001/api',
-  //websocketUrl: 'https://localhost:5001',
-  apiUrl: 'https://investoapiweb20201226194228.azurewebsites.net/api',
-  websocketUrl: 'https://investoapiweb20201226194228.azurewebsites.net',
+  apiUrl: 'https://localhost:5001/api',
+  websocketUrl: 'https://localhost:5001',
+  // apiUrl: 'https://investoapiweb20201226194228.azurewebsites.net/api',
+  // websocketUrl: 'https://investoapiweb20201226194228.azurewebsites.net',
 };
 
 /*
